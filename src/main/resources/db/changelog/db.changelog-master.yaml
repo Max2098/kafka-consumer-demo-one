@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - property:
+      dbms: postgresql
+      name: index.name
+      value: '(lower(name))'
+  - property:
+      dbms: postgresql
+      name: sys_time
+      value: current_timestamp()
+  - property:
+      dbms: postgresql
+      name: random_uuid
+      value: gen_random_uuid()
+  - property:
+      name: schema_name
+      value: stdn_clients.
+  - includeAll:
+      path: db/update/scripts
+      errorIfMissingOrEmpty: true
