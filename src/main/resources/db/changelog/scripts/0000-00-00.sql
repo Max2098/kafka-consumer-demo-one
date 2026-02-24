@@ -1,1 +1,1 @@
-create schema if not exists edo;
+create schema if not exists kafka;

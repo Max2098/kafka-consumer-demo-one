@@ -1,9 +1,9 @@
-CREATE TABLE edo.request
+CREATE TABLE kafka.user
 (
-    id             bigserial primary key,
-    headers        jsonb       NOT NULL,
-    request_time   timestamptz NOT NULL,
-    source_service varchar     NOT NULL,
-    call_id        varchar     NOT NULL,
-    create_at      timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
+    id              bigserial primary key,
+    name            varchar     NOT NULL,
+    phone           varchar     NOT NULL,
+    balance         varchar     NOT NULL,
+    birthday        date        NOT NULL,
+    create_at       timestamptz NOT NULL
 );

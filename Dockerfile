@@ -1,13 +1,31 @@
-FROM eclipse-temurin:21
+FROM gradle:8-jdk21 AS build
 
-# Устанавливаем рабочую директорию внутри контейнера
 WORKDIR /app
 
-# Копируем JAR-файл, собранный Gradle
-COPY build/libs/*.jar app.jar
+# Копируем build.gradle и gradle wrapper
+COPY ./kafka-consumer-demo-one/build.gradle ./
+COPY ./kafka-consumer-demo-one/gradlew ./
+COPY ./kafka-consumer-demo-one/gradle ./gradle/
+COPY ./kafka-consumer-demo-one/lombok.config ./
 
-# Открываем порт, на котором работает Spring Boot (по умолчанию 8080)
-EXPOSE 8082
+# Кэшируем зависимости
+RUN --mount=type=cache,id=gradle-cache-kafka-consumer-demo-one,target=/home/gradle/.gradle \
+    chmod +x ./gradlew && \
+    ./gradlew dependencies --no-daemon -Dorg.gradle.vfs.watch=false
 
-# Запускаем приложение
+# Копируем исходники
+COPY ./kafka-consumer-demo-one/src ./src/
+
+# Собираем JAR
+RUN --mount=type=cache,id=gradle-cache-kafka-consumer-demo-one,target=/home/gradle/.gradle \
+    ./gradlew build -x test --no-daemon -Dorg.gradle.vfs.watch=false
+
+FROM eclipse-temurin:21-jre-alpine
+
+WORKDIR /app
+
+COPY --from=build /app/build/libs/*.jar app.jar
+
+EXPOSE 8081
+
 ENTRYPOINT ["java", "-jar", "app.jar"]

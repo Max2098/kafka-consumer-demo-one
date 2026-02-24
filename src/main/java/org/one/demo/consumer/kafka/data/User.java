@@ -1,4 +1,4 @@
-package org.demo.producer.kafka.data;
+package org.one.demo.consumer.kafka.data;
 
 import lombok.Data;
 
@@ -12,5 +12,5 @@ public class User {
     private String phone;
     private BigDecimal balance;
     private LocalDate birthday;
-    private ZonedDateTime created;
+    private ZonedDateTime createAt;
 }
